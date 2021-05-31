@@ -10,6 +10,8 @@ export default gql`
         password: String!
         avartarURL: String
         githubUsername: String!
+        followers(page: Int!): [User]
+        following(page: Int!): [User]
         createdAt: String!
         updatedAt: String!
     }
