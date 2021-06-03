@@ -1,6 +1,7 @@
 import { Resolvers } from "../../types";
 import { protectResolver } from "../../users/users.utils";
 import { createWriteStream } from "fs";
+import { uploadToS3 } from "../../shared/shared.utils";
 
 const resolver: Resolvers = {
     Mutation: {
@@ -20,15 +21,8 @@ const resolver: Resolvers = {
                         error: "Coffeeshop not found"
                     };
                 }
-                const { filename, createReadStream } = await file;
-                const newFilename = `${loggedInUser.id}-${Date.now()}-${filename}`;
-                const readStream = createReadStream();
-                const writeStream = createWriteStream(
-                    process.cwd() + "/uploads/" + newFilename
-                );
-                readStream.pipe(writeStream);
-                let photoUrl = `http://localhost:4000/static/${newFilename}`;
 
+                let photoUrl = await uploadToS3(file, loggedInUser.id, "coffeeshop_photo");
                 const newCoffeeShopPhoto = await client.coffeeShopPhoto.create({
                     data: {
                         url: photoUrl,
