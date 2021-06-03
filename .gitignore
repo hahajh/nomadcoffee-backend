@@ -116,4 +116,5 @@ dist
 .pnp.*
 
 # image file
-uploads/
+/uploads
+/build
